@@ -38,3 +38,15 @@ for i in $dependencies; do
         git reset --hard
     fi
 done
+for i in $dependencies; do
+    echo "testing removal of $a"
+    cargo rm "$a";
+    cargo check --all-targets --all-features
+    if (( $? == 0 )); then
+        echo "removal succeeded, committing"
+        git commit --no-gpg-sign -m "Removing $a from $(basename `pwd`)" --all;
+    else
+        echo "removal failed, rolling back"
+        git reset --hard
+    fi
+done
